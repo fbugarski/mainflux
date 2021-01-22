@@ -24,7 +24,7 @@ def Channel(id, token):
     return resp
 
 def UpdateChannel(channel, token):
-    resp= requests.put("http://localhost/channels/"+channel["id"], headers={"Authorization": token}, json = channel) 
+    resp= requests.put("http://localhost/channels/"+channel["id"], json=channel, headers={"Authorization": token}) 
     return resp
 
 def DeleteChannel(id, token):
