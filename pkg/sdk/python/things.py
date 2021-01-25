@@ -20,20 +20,20 @@ class Things:
         resp = requests.get(url, headers={"Authorization": token})
         return resp.json()
 
-    def things_by_channel(self, channelID, params, token):
-        url = self.url + "/channels" + channelID + '/things' + '?' + 'offset=' + params['offset'] \
+    def things_by_channel(self, channel_id, params, token):
+        url = self.url + "/channels/" + channel_id + '/things' + '?' + 'offset=' + params['offset'] \
             + '&' + 'limit=' + params['limit'] + '&' + 'connected=' + params['connected']
-        resp = requests.post(url, json=channels, headers={"Authorization": token})
+        resp = requests.post(url, headers={"Authorization": token})
         return resp
 
     def thing(self, id, token):
-        resp = requests.get(self.url + "/things" + id, headers={"Authorization": token})
+        resp = requests.get(self.url + "/things/" + id, headers={"Authorization": token})
         return resp
 
     def update_thing(self, thing, token):
-        resp = requests.put(self.url + "/things" + thing["id"], json=thing, headers={"Authorization": token}) 
+        resp = requests.put(self.url + "/things/" + thing["id"], json=thing, headers={"Authorization": token}) 
         return resp
 
     def delete_thing(self, id, token):
-        resp = requests.delete(self.url + "/things" + id, headers={"Authorization": token})
+        resp = requests.delete(self.url + "/things/" + id, headers={"Authorization": token})
         return resp

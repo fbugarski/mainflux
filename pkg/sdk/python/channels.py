@@ -20,13 +20,13 @@ class Channels:
         return resp.json()
 
     def channel_by_thing(self, thing_id, query_params, token):
-        url = self.url + "/things" + thing_id + '/channels' + '?' + 'offset=' + query_params['offset'] \
+        url = self.url + "/things/" + thing_id + '/channels' + '?' + 'offset=' + query_params['offset'] \
                 + '&' + 'limit=' + query_params['limit'] + '&' + 'connected=' + query_params['connected']
         resp = requests.post(url, headers={"Authorization": token})
         return resp
 
     def channel(self, id, token):
-        resp = requests.get(self.url + "/channels/"+id, headers={"Authorization": token})
+        resp = requests.get(self.url + "/channels/" + id, headers={"Authorization": token})
         return resp
 
     def update_channel(self, channel, token):

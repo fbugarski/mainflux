@@ -22,4 +22,4 @@ class SDK:
 
     def version(self):
         resp = requests.get(self.version_url + "/version")
-        return resp
+        return resp.json()
