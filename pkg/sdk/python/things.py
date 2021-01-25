@@ -1,33 +1,39 @@
 import requests
-import json
+
 
 class Things:
-    def CreateThing(thing, token):
-        resp = requests.post("http://localhost/things", json=thing, headers={"Authorization": token})
+    def __init__(self, url):
+        self.url = url
+
+    def create_thing(self, thing, token):
+        resp = requests.post(self.url + "/things", json=thing, headers={"Authorization": token})
+        print(resp.content)
         return resp.headers.get("location")
 
-    def CreateThings(things, token):
-        resp = requests.post("http://localhost/things", json=things, headers={"Authorization": token})
+    def create_things(self, things, token):
+        resp = requests.post(self.url + "/things", json=things, headers={"Authorization": token})
         return resp
 
-    def Things(params, token):
-        url = "http://localhost/things"+'?'+'offset='+params['offset']+'&'+'limit='+params['limit']+'&'+'name='+params['name']
+    def things(self, params, token):
+        url = self.url + "/things" + '?' + 'offset=' + params['offset'] + '&' \
+            + 'limit=' + params['limit'] + '&'+'name=' + params['name']
         resp = requests.get(url, headers={"Authorization": token})
         return resp.json()
 
-    def ThingsByChannel(channelID, params, token):
-        url = "http://localhost/channels"+channelID+'/things'+'?'+'offset='+params['offset']+'&'+'limit='+params['limit']+'&'+'connected='+params['connected']
+    def things_by_channel(self, channelID, params, token):
+        url = self.url + "/channels" + channelID + '/things' + '?' + 'offset=' + params['offset'] \
+            + '&' + 'limit=' + params['limit'] + '&' + 'connected=' + params['connected']
         resp = requests.post(url, json=channels, headers={"Authorization": token})
         return resp
-        
-    def Thing(id, token):
-        resp = requests.get("http://localhost/things/"+id, headers={"Authorization": token})
+
+    def thing(self, id, token):
+        resp = requests.get(self.url + "/things" + id, headers={"Authorization": token})
         return resp
 
-    def UpdateThing(thing, token):
-        resp= requests.put("http://localhost/things/"+thing["id"], json=thing, headers={"Authorization": token}) 
+    def update_thing(self, thing, token):
+        resp = requests.put(self.url + "/things" + thing["id"], json=thing, headers={"Authorization": token}) 
         return resp
 
-    def DeleteThing(id, token):
-        resp = requests.delete("http://localhost/things/"+id, headers={"Authorization": token})
+    def delete_thing(self, id, token):
+        resp = requests.delete(self.url + "/things" + id, headers={"Authorization": token})
         return resp

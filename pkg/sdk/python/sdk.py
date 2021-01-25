@@ -1,13 +1,25 @@
 import users
 import things
-import message
+import messages
 import channels
+import requests
+
+default_url = "http://localhost"
+
 
 class SDK:
-    def __init__(self, url):
-        self.users = users.Users()
-        self.things = things.Things()
-        self.message = message.Message()
-        self.channels = channels.Channels()
-        self.url = url
+    def __init__(
+        self,
+        users_url=default_url,
+        things_url=default_url,
+        messages_url=default_url
+    ):
+        self.users = users.Users(users_url)
+        self.things = things.Things(things_url)
+        self.messages = messages.Messages(messages_url)
+        self.channels = channels.Channels(things_url)
+        self.version_url = things_url
 
+    def version(self):
+        resp = requests.get(self.version_url + "/version")
+        return resp
