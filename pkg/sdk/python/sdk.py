@@ -4,6 +4,7 @@ import messages
 import channels
 import requests
 
+
 default_url = "http://localhost"
 
 
@@ -21,5 +22,8 @@ class SDK:
         self.version_url = things_url
 
     def version(self):
-        resp = requests.get(self.version_url + "/version")
-        return resp.json()
+        response = requests.get(self.version_url + "/version")
+        return response.json()
+
+
+sdk = SDK()

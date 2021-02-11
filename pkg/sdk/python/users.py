@@ -43,8 +43,7 @@ class Users:
             if c == 500:
                 mf_resp.error.message = "Unexpected server-side error occurred"
         else:
-            t = http_resp.json()["token"]
-            mf_resp.value = t
+            mf_resp.value = http_resp.json()["token"]
         return mf_resp
 
     def get(self, id, token):
@@ -61,7 +60,7 @@ class Users:
             if c == 500:
                 mf_resp.error.message = "Unexpected server-side error occurred"
         else:
-            mf_resp.value = http_resp.content.decode("utf-8")
+            mf_resp.value = json.loads(http_resp.json)
         return mf_resp
 
     def get_all(self, token):
@@ -78,7 +77,7 @@ class Users:
             if c == 500:
                 mf_resp.error.message = "Unexpected server-side error occurred"
         else:
-            mf_resp.value = http_resp.content.decode("utf-8")
+            mf_resp.value = json.loads(http_resp.json)
         return mf_resp
 
     def update(self, user, token):
@@ -96,8 +95,6 @@ class Users:
                 mf_resp.error.message = "Failed due to non existing user"
             if c == 500:
                 mf_resp.error.message = "Unexpected server-side error occurred"
-        else:
-            mf_resp.value = http_resp.status_code
         return mf_resp
 
     def update_password(self, old_password, new_password, token):
@@ -117,6 +114,4 @@ class Users:
                 mf_resp.error.message = "Missing or invalid content type"
             if c == 500:
                 mf_resp.error.message = "Unexpected server-side error occurred"
-        else:
-            mf_resp.value = http_resp.status_code
         return mf_resp
