@@ -50,10 +50,10 @@ class Channels:
             mf_resp.value = location.split('/')[2]
         return mf_resp
 
-    def get(self, id, token):
+    def get(self, chanID, token):
         '''Gets a channel entity for a logged-in user'''
         mf_resp = response.Response()
-        http_resp = requests.get(self.url + "/channels/" + id, headers={"Authorization": token})
+        http_resp = requests.get(self.url + "/channels/" + chanID, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
             c = http_resp.status_code
@@ -100,10 +100,10 @@ class Channels:
                 query = query + pt + params[pt] + '&'
         return query
 
-    def get_by_thing(self, id, params, token):
+    def get_by_thing(self, thingID, params, token):
         '''Gets all channels to which a specific thing is connected to'''
         query = self.construct_query(params)
-        url = self.url + "/things/" + id + '/channels' + query
+        url = self.url + "/things/" + thingID + '/channels' + query
         mf_resp = response.Response()
         http_resp = requests.post(url, headers={"Authorization": token})
         if http_resp.status_code != 201:
@@ -142,9 +142,9 @@ class Channels:
                 mf_resp.error.message = "Unexpected server-side error occurred"
         return mf_resp
 
-    def delete(self, id, token):
+    def delete(self, chanID, token):
         '''Deletes a channel entity from database'''
-        http_resp = requests.delete(self.url + "/channels/" + id, headers={"Authorization": token})
+        http_resp = requests.delete(self.url + "/channels/" + chanID, headers={"Authorization": token})
         mf_resp = response.Response()
         if http_resp.status_code != 204:
             mf_resp.error.status = 1
