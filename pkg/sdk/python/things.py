@@ -33,7 +33,7 @@ class Things:
     def create_bulk(self, things, token):
         '''Creates multiple things in a bulk'''
         mf_resp = response.Response()
-        http_resp = requests.post(self.url + "/things", json=things, headers={"Authorization": token})
+        http_resp = requests.post(self.url + "/bulk", json=things, headers={"Authorization": token})
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
             c = http_resp.status_code
@@ -159,13 +159,19 @@ class Things:
                 mf_resp.error.message = "Unexpected server-side error occurred"
         return mf_resp
 
+    resp = {
+        400: "Failed due to malformed JSON",
+        401: "Missing or invalid access token provided",
+        404: "A non-existent entity request",
+    }
+
     def connect(self, thingID, chanID, token):
         '''Connects thing and channel'''
         payload = {
           "thingID": thingID,
           "chanID": chanID
         }
-        http_resp = requests.post(self.url + "/things/" + thingID + chanID  , headers={"Authorization": token}, data=json.dumps(payload))
+        http_resp = requests.post(self.url + "/connect/" + thingID + chanID, headers={"Authorization": token}, data=json.dumps(payload))
         mf_resp = response.Response()
         if http_resp.status_code != 201:
             mf_resp.error.status = 1

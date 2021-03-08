@@ -77,7 +77,7 @@ class Users:
             if c == 500:
                 mf_resp.error.message = "Unexpected server-side error occurred"
         else:
-            mf_resp.value = http_resp.json()
+            mf_resp.value = json.loads(http_resp.json())
         return mf_resp
 
     def update(self, user, token):

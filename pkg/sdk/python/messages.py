@@ -6,11 +6,11 @@ class Messages:
     def __init__(self, url):
         self.url = url
 
-    def send(self, chanID, msg, token):
+    def send(self, chanID, msg, thing_key):
         '''Sends message via HTTP protocol'''
         url = self.url + "/channels/" + chanID + '/messages'
         mf_resp = response.Response()
-        http_resp = requests.post(url, json=msg, headers={"Authorization": token})
+        http_resp = requests.post(url, json=msg, headers={"Authorization": thing_key})
         if http_resp.status_code != 202:
             mf_resp.error.status = 1
             c = http_resp.status_code
