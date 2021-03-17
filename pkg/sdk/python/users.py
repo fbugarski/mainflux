@@ -1,6 +1,9 @@
 import requests
-import response
 import json
+
+import response
+import errors
+
 
 
 class Users:
@@ -13,15 +16,7 @@ class Users:
         http_resp = requests.post(self.url + "/users", json=user)
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            c = http_resp.status_code
-            if c == 400:
-                mf_resp.error.message = "Failed due to malformed JSON"
-            if c == 409:
-                mf_resp.error.message = "Failed due to using an existing email address"
-            if c == 415:
-                mf_resp.error.message = "Missing or invalid content type"
-            if c == 500:
-                mf_resp.error.message = "Unexpected server-side error occurred"
+            mf_resp.error.message = errors.handle_error(errors.users["create"], http_resp.status_code)
         else:
             location = http_resp.headers.get("location")
             mf_resp.value = location.split('/')[2]
@@ -33,15 +28,7 @@ class Users:
         http_resp = requests.post(self.url + "/tokens", json=user)
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            c = http_resp.status_code
-            if c == 400:
-                mf_resp.error.message = "Failed due to malformed JSON"
-            if c == 409:
-                mf_resp.error.message = "Failed due to using an existing email address"
-            if c == 415:
-                mf_resp.error.message = "Missing or invalid content type"
-            if c == 500:
-                mf_resp.error.message = "Unexpected server-side error occurred"
+            mf_resp.error.message = errors.handle_error(errors.users["login"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()["token"]
         return mf_resp
@@ -52,13 +39,7 @@ class Users:
         http_resp = requests.get(self.url + "/users/" + id, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            c = http_resp.status_code
-            if c == 400:
-                mf_resp.error.message = "Failed due to malformed query parameters"
-            if c == 403:
-                mf_resp.error.message = "Missing or invalid access token provided"
-            if c == 500:
-                mf_resp.error.message = "Unexpected server-side error occurred"
+            mf_resp.error.message = errors.handle_error(errors.users["get"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -69,15 +50,9 @@ class Users:
         mf_resp = response.Response()
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            c = http_resp.status_code
-            if c == 400:
-                mf_resp.error.message = "Failed due to malformed query parameters"
-            if c == 403:
-                mf_resp.error.message = "Missing or invalid access token provided"
-            if c == 500:
-                mf_resp.error.message = "Unexpected server-side error occurred"
+            mf_resp.error.message = errors.handle_error(errors.users["get_all"], http_resp.status_code)
         else:
-            mf_resp.value = json.loads(http_resp.json())
+            mf_resp.value = http_resp.json()
         return mf_resp
 
     def update(self, user, token):
@@ -86,32 +61,20 @@ class Users:
         mf_resp = response.Response()
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            c = http_resp.status_code
-            if c == 400:
-                mf_resp.error.message = "Failed due to malformed JSON"
-            if c == 403:
-                mf_resp.error.message = "Missing or invalid access token provided"
-            if c == 404:
-                mf_resp.error.message = "Failed due to non existing user"
-            if c == 500:
-                mf_resp.error.message = "Unexpected server-side error occurred"
+            mf_resp.error.message = errors.handle_error(errors.users["update"], http_resp.status_code)
         return mf_resp
 
-    def update_password(self, old_password, new_password, token):
+    def update_password(self, old_password, password, token):
         '''Changes user password'''
         payload = {
           "old_password": old_password,
-          "new_password": new_password
+          "password": password
         }
-        http_resp = requests.patch(self.url + "/password", headers={"Authorization": token}, data=json.dumps(payload))
+        http_resp = requests.patch(self.url + "/password", headers={"Authorization": token}, json=payload)
         mf_resp = response.Response()
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            c = http_resp.status_code
-            if c == 400:
-                mf_resp.error.message = "Failed due to malformed JSON"
-            if c == 415:
-                mf_resp.error.message = "Missing or invalid content type"
-            if c == 500:
-                mf_resp.error.message = "Unexpected server-side error occurred"
+            mf_resp.error.message = errors.handle_error(errors.users["update_password"], http_resp.status_code)
+        else:
+            mf_resp.value = http_resp.json()
         return mf_resp
