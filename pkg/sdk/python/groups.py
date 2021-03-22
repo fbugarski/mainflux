@@ -1,5 +1,4 @@
 import requests
-import json
 
 import response
 import errors
@@ -33,23 +32,24 @@ class Groups:
         return mf_resp
 
     def construct_query(self, params):
+        if params is None:
+            return ""
         query = '?'
-        param_types = ['offset', 'limit', 'connected']
-        if params is not None:
-            for pt in param_types:
-                if params[pt] is not None:
-                    query = query + pt + params[pt] + '&'
+        param_types = ['offset', 'limit', 'order', 'direction']
+        for pt in param_types:
+            if pt in params.keys():
+                query += "{}={}&".format(pt, params[pt])
         return query
 
     def get_all(self, token, query_params=None):
-        '''Gets all things from database'''
+        '''Gets all groups from database'''
         query = self.construct_query(query_params)
         url = self.url + '/groups' + query
         mf_resp = response.Response()
         http_resp = requests.get(url, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get_all"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.groups["get_all"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -87,7 +87,7 @@ class Groups:
         '''Assign'''
         mf_resp = response.Response()
         http_resp = requests.delete(self.url + "/groups/" + group_id + "/members", headers={"Authorization": token})
-        if http_resp.status_code != 200:
+        if http_resp.status_code != 204:
             mf_resp.error.status = 1
             mf_resp.error.message = errors.handle_error(errors.users["unassign"], http_resp.status_code)
         else:

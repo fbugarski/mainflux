@@ -1,5 +1,4 @@
 import requests
-import json
 
 import response
 import errors
@@ -15,7 +14,7 @@ class Channels:
         http_resp = requests.post(self.url + "/channels", json=channel, headers={"Authorization": token})
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["create"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.channels["create"], http_resp.status_code)
         else:
             location = http_resp.headers.get("location")
             mf_resp.value = location.split('/')[2]
@@ -27,7 +26,7 @@ class Channels:
         http_resp = requests.post(self.url + "/channels/bulk", json=channels, headers={"Authorization": token})
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["create_bulk"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.channels["create_bulk"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -38,18 +37,19 @@ class Channels:
         http_resp = requests.get(self.url + "/channels/" + chanID, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.channels["get"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
 
     def construct_query(self, params):
+        if params is None:
+            return ""
         query = '?'
-        param_types = ['offset', 'limit', 'connected']
-        if params is not None:
-            for pt in param_types:
-                if params[pt] is not None:
-                    query = query + pt + params[pt] + '&'
+        param_types = ['offset', 'limit', 'order', 'direction']
+        for pt in param_types:
+            if pt in params.keys():
+                query += "{}={}&".format(pt, params[pt])
         return query
 
 
@@ -61,7 +61,7 @@ class Channels:
         http_resp = requests.get(url, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get_all"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.channels["get_all"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -71,10 +71,10 @@ class Channels:
         query = self.construct_query(params)
         url = self.url + "/things/" + thingID + '/channels' + query
         mf_resp = response.Response()
-        http_resp = requests.post(url, headers={"Authorization": token})
-        if http_resp.status_code != 201:
+        http_resp = requests.get(url, headers={"Authorization": token})
+        if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get_by_thing"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.channels["get_by_thing"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -85,9 +85,7 @@ class Channels:
         mf_resp = response.Response()
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["update"], http_resp.status_code)
-        else:
-            mf_resp.value = http_resp.json()
+            mf_resp.error.message = errors.handle_error(errors.channels["update"], http_resp.status_code)
         return mf_resp
 
     def delete(self, chanID, token):
@@ -96,5 +94,5 @@ class Channels:
         mf_resp = response.Response()
         if http_resp.status_code != 204:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["delete"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.channels["delete"], http_resp.status_code)
         return mf_resp

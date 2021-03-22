@@ -1,5 +1,4 @@
 import requests
-import json
 
 import response
 import errors
@@ -15,7 +14,7 @@ class Things:
         http_resp = requests.post(self.url + "/things", json=thing, headers={"Authorization": token})
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["create"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["create"], http_resp.status_code)
         else:
             location = http_resp.headers.get("location")
             mf_resp.value = location.split('/')[2]
@@ -27,7 +26,7 @@ class Things:
         http_resp = requests.post(self.url + "/things/bulk", json=things, headers={"Authorization": token})
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["create_bulk"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["create_bulk"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -38,18 +37,19 @@ class Things:
         http_resp = requests.get(self.url + "/things/" + thing_id, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["get"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
 
     def construct_query(self, params):
+        if params is None:
+            return ""
         query = '?'
-        param_types = ['offset', 'limit', 'connected']
-        if params is not None:
-            for pt in param_types:
-                if params[pt] is not None:
-                    query = query + pt + params[pt] + '&'
+        param_types = ['offset', 'limit', 'order', 'direction']
+        for pt in param_types:
+            if pt in params.keys():
+                query += "{}={}&".format(pt, params[pt])
         return query
 
     def get_all(self, token, query_params=None):
@@ -60,7 +60,7 @@ class Things:
         http_resp = requests.get(url, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get_all"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["get_all"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -70,10 +70,10 @@ class Things:
         query = self.construct_query(params)
         url = self.url + "/channels/" + chanID + '/things' + query
         mf_resp = response.Response()
-        http_resp = requests.post(url, headers={"Authorization": token})
-        if http_resp.status_code != 201:
+        http_resp = requests.get(url, headers={"Authorization": token})
+        if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["get_by_channel"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["get_by_channel"], http_resp.status_code)
         else:
             mf_resp.value = http_resp.json()
         return mf_resp
@@ -84,9 +84,7 @@ class Things:
         mf_resp = response.Response()
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["update"], http_resp.status_code)
-        else:
-            mf_resp.value = http_resp.json()
+            mf_resp.error.message = errors.handle_error(errors.things["update"], http_resp.status_code)
         return mf_resp
 
     def delete(self, thing_id, token):
@@ -95,22 +93,20 @@ class Things:
         mf_resp = response.Response()
         if http_resp.status_code != 204:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["delete"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["delete"], http_resp.status_code)
         return mf_resp
 
     def connect(self, channel_ids, thing_ids, token):
         '''Connects thing and channel'''
         payload = {
-          "channel_ids": [channel_ids],
-          "thing_ids": [thing_ids]
+          "channel_ids": channel_ids,
+          "thing_ids": thing_ids,
         }
         http_resp = requests.post(self.url + "/connect", headers={"Authorization": token}, json=payload)
         mf_resp = response.Response()
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["connect"], http_resp.status_code)
-        else:
-            mf_resp.value = http_resp.json()
+            mf_resp.error.message = errors.handle_error(errors.things["connect"], http_resp.status_code)
         return mf_resp
 
     def disconnect(self, channel_ids, thing_ids, token):
@@ -119,5 +115,5 @@ class Things:
         mf_resp = response.Response()
         if http_resp.status_code != 204:
             mf_resp.error.status = 1
-            mf_resp.error.message = errors.handle_error(errors.users["disconnect"], http_resp.status_code)
+            mf_resp.error.message = errors.handle_error(errors.things["disconnect"], http_resp.status_code)
         return mf_resp

@@ -33,11 +33,17 @@ users = {
     "update": {
         404: "Failed due to non existing user.",
     },
+    "update_password": {
+
+    },
 }
 
 things = {
     "create": {
         422: "Unprocessable Entity."
+    },
+    "create_bulk": {
+
     },
     "get": {
         404: "Thing does not exist.",
@@ -45,11 +51,18 @@ things = {
     "get_all": {
         404: "Thing does not exist.",
     },
+    "get_by_channel": {
+        400: "Failed due to malformed query parameters.",
+
+    },
     "update": {
         404: "Thing does not exist.",
     },
     "delete": {
         400: "Failed due to malformed thing's ID.",
+    },
+    "connect": {
+
     },
     "disconnect": {
         400: "Failed due to malformed query parameters.",
@@ -58,9 +71,22 @@ things = {
 }
 
 channels = {
+    "create": {
+
+    },
+    "create_bulk": {
+
+    },
+    "get": {
+
+    },
     "get_all": {
         400: "Failed due to malformed channel's ID.",
         404: "Channel does not exist.",
+    },
+    "get_by_thing": {
+        400: "Failed due to malformed query parameters.",
+        404: "Channel or thing does not exist.",
     },
     "update": {
         404: "Channel does not exist."
@@ -79,7 +105,7 @@ messages = {
     },
     "read": {
         400: "Failed due to malformed query parameters.",
-    }
+    },
 }
 
 groups = {
@@ -100,6 +126,9 @@ groups = {
     },
     "members": {
         409: "Failed due to using an existing email address.",
+    },
+    "assign": {
+
     },
     "unassign": {
         400: "Failed due to malformed query parameters.",
