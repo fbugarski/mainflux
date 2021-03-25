@@ -107,6 +107,8 @@ class Things:
         if http_resp.status_code != 201:
             mf_resp.error.status = 1
             mf_resp.error.message = errors.handle_error(errors.things["connect"], http_resp.status_code)
+        else:
+            mf_resp.value = http_resp.json()
         return mf_resp
 
     def disconnect(self, channel_ids, thing_ids, token):

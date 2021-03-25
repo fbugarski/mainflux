@@ -33,10 +33,10 @@ class Users:
             mf_resp.value = http_resp.json()["token"]
         return mf_resp
 
-    def get(self, id, token):
+    def get(self, user_id, token):
         '''Gets a user entity for a logged-in user'''
         mf_resp = response.Response()
-        http_resp = requests.get(self.url + "/users/" + id, headers={"Authorization": token})
+        http_resp = requests.get(self.url + "/users/" + user_id, headers={"Authorization": token})
         if http_resp.status_code != 200:
             mf_resp.error.status = 1
             mf_resp.error.message = errors.handle_error(errors.users["get"], http_resp.status_code)
