@@ -41,7 +41,7 @@ class Groups:
                 query += "{}={}&".format(pt, params[pt])
         return query
 
-    def get_all(self, token, group_id, query_params=None):
+    def get_all(self, group_id, token, query_params=None):
         '''Gets all groups from database'''
         query = self.construct_query(query_params)
         url = self.url + '/groups/' + group_id + query

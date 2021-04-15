@@ -46,6 +46,7 @@ things = {
 
     },
     "get": {
+        400: "Failed due to malformed query parameters.",
         404: "Thing does not exist.",
     },
     "get_all": {
@@ -53,7 +54,6 @@ things = {
     },
     "get_by_channel": {
         400: "Failed due to malformed query parameters.",
-
     },
     "update": {
         404: "Thing does not exist.",
@@ -86,7 +86,7 @@ channels = {
     },
     "get_by_thing": {
         400: "Failed due to malformed query parameters.",
-        404: "Channel or thing does not exist.",
+        404: "Thing does not exist.",
     },
     "update": {
         404: "Channel does not exist."

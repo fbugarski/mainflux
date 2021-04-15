@@ -66,10 +66,10 @@ class Channels:
             mf_resp.value = http_resp.json()
         return mf_resp
 
-    def get_by_thing(self, thingID, params, token):
+    def get_by_thing(self, thing_id, params, token):
         '''Gets all channels to which a specific thing is connected to'''
         query = self.construct_query(params)
-        url = self.url + "/things/" + thingID + '/channels' + query
+        url = self.url + "/things/" + thing_id + '/channels' + query
         mf_resp = response.Response()
         http_resp = requests.get(url, headers={"Authorization": token})
         if http_resp.status_code != 200:
