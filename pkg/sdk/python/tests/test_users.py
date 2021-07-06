@@ -1,8 +1,6 @@
-import sdk
+from functions import sdk
 
 import json
-import pytest
-import requests_mock
 
 s = sdk.SDK()
 user = {"email": "test@email.com", "password": "12345678"}

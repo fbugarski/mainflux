@@ -1,8 +1,8 @@
 import requests
 import json
 
-import response
-import errors
+from functions import response
+from functions import errors
 
 
 class Users:

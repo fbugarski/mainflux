@@ -4,11 +4,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="example-pkg-fbugarski",
+    name="Mainflux",
     version="0.0.1",
     author="Filip Bugarski",
     author_email="filipbugarski@gmail.com",
-    description="A small example package",
+    description="Python SDK",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/mainflux/mainflux/tree/master/pkg/sdk/python",
@@ -17,7 +17,6 @@ setuptools.setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3.8.5",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     package_dir={"": "src"},

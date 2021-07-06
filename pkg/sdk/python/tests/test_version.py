@@ -1,9 +1,8 @@
-import sdk
-import pytest
+from functions import sdk
+
 import json
 
 s = sdk.SDK()
-
 
 
 def test_version(requests_mock):

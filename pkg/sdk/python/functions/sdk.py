@@ -1,12 +1,13 @@
-import users
-import things
-import messages
-import channels
-import groups
+from functions import users
+from functions import things
+from functions import messages
+from functions import channels
+from functions import groups
 
 import requests
 
 default_url = "http://localhost"
+
 
 class SDK:
     def __init__(

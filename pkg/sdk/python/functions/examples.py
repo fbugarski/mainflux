@@ -1,24 +1,25 @@
-import users
-import things
-import messages
-import channels
-import groups
+from functions import users
+from functions import things
+from functions import messages
+from functions import channels
+from functions import groups
 import requests
-from sdk import SDK
+from functions import SDK
+
 
 default_url = "http://localhost"
 
 sdk = SDK()
 
 '''To start working with the Mainflux system, you need to create a user account'''
-mf_resp = sdk.users.create({"email":"<user_email>", "password":"<user_password>"})
+mf_resp = sdk.users.create({"email": "<user_email>", "password": "<user_password>"})
 if mf_resp.error.status == 0:
     print(mf_resp.value)
 else:
     print(mf_resp.error.message)
 
 '''To log in to the Mainflux system, you need to create a user token'''
-mf_resp = sdk.users.login({"email":"<user_email>", "password":"<user_password>"})
+mf_resp = sdk.users.login({"email": "<user_email>", "password": "<user_password>"})
 if mf_resp.error.status == 0:
     print(mf_resp.value)
 else:
@@ -32,7 +33,7 @@ else:
     print(mf_resp.error.message)
 
 '''Updating user entities in the database'''
-mf_resp = sdk.users.update(<user_token>, {"metadata":{"foo":"bar"}})
+mf_resp = sdk.users.update(<user_token>, {"metadata": {"foo": "bar"}})
 if mf_resp.error.status == 0:
     print(mf_resp.value)
 else:
